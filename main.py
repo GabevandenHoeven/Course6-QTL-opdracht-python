@@ -16,7 +16,7 @@ def read_files(loc, qua):
                 if not loc_line == "":
                     d.update({header: loc_line})
                 header = line.split(" (a,b) ;")[0]
-            elif "individual names:" == line:
+            elif "individual names:" in line:
                 start_reading = False
                 d.update({header: loc_line})
             elif start_reading:
