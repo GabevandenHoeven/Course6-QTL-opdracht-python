@@ -36,6 +36,7 @@ def read_files(loc, qua):
                 loc_line += line.strip("\n")
         loc_bes.close()
 
+    start_reading = False
     with open(qua, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
