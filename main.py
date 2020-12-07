@@ -63,4 +63,4 @@ if __name__ == "__main__":
     loc_bestand = "CvixLerC9.loc"
     qua_bestand = "CvixLerC9.qua"
 
-    read_files(loc_bestand, qua_bestand)
+    d, d2 = read_files(loc_bestand, qua_bestand)
