@@ -58,6 +58,28 @@ def read_qua_file(qua_file):
     return dictionary
 
 
+def waardesConverteren(loc, qua):
+    """Een functie die waardes toekent aan A's en B's van de
+       bijbehorende marker en deze doet retourneren als een
+       lijst.
+
+    Input = -dictionary met markers en loci (dict).
+            -dictionary met waardes (dict).
+    Output = lijst met omgezette waardes.
+    """
+    markers = loc.keys()
+    # Alle markers in de dioctionary afgaan.
+    for marker in markers:
+        loci = loc.get(marker)
+        teller = 0
+        # Alle loci omzetten naar een waarde uit qua-bestand.
+        for locus in loci:
+            teller += 1
+            print(str(teller) + " " + locus)
+    return 0
+
+
+
 if __name__ == "__main__":
     print("/---------------------------------\\")
     print("|    QTL-opdracht assignment 2    |")
@@ -70,3 +92,4 @@ if __name__ == "__main__":
 
     loc = read_loc_file(loc_bestand)
     qua = read_qua_file(qua_bestand)
+    waardesConverteren(loc, qua)
