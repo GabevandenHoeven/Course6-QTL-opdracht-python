@@ -6,7 +6,7 @@ def read_loc_file(loc):
     :return dic: dict - The dictionary for the loc file. The keys are the gen names and the values a list with the bands
 
     """
-    dic = {}
+    dictionary = {}
     loc_line = ""
     bands = []
     start_reading = False
@@ -18,7 +18,7 @@ def read_loc_file(loc):
                     for c in loc_line:
                         if not c == " ":
                             bands.append(c)
-                    dic.update({header: bands})
+                    dictionary.update({header: bands})
                     bands = []
                     loc_line = ""
                 header = line.split(" (a,b) ;")[0]
@@ -27,11 +27,11 @@ def read_loc_file(loc):
                 for c in loc_line:
                     if not c == " ":
                         bands.append(c)
-                dic.update({header: bands})
+                dictionary.update({header: bands})
             elif start_reading:
                 loc_line += line.strip("\n")
 
-    return dic
+    return dictionary
 
 
 def read_qua_file(qua):
@@ -41,7 +41,7 @@ def read_qua_file(qua):
     :return dic2: dict - The dictionary for the qua file. The keys are the positions and the values the numbers
 
     """
-    dic2 = {}
+    dictionary = {}
     start_reading = False
     with open(qua, "r") as qua_bes:
         for line in qua_bes:
@@ -53,9 +53,9 @@ def read_qua_file(qua):
                 index, num = line.split("\t")
                 index = int(index)
                 num = num.replace("\n", "")
-                dic2.update({index: num})
+                dictionary.update({index: num})
 
-    return dic2
+    return dictionary
 
 
 if __name__ == "__main__":
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     loc_bestand = "CvixLerC9.loc"
     qua_bestand = "CvixLerC9.qua"
 
-    d = read_loc_file(loc_bestand)
-    d2 = read_qua_file(qua_bestand)
+    loc = read_loc_file(loc_bestand)
+    qua = read_qua_file(qua_bestand)
