@@ -54,11 +54,11 @@ def read_files(loc, qua):
 
 
 if __name__ == "__main__":
-    # print("/---------------------------------\\")
-    # print("|    QTL-opdracht assignment 2    |")
-    # print("|         Ontwikkeld door:        |")
-    # print("| Gabe van de Hoeven & Max Nollet |")
-    # print("\---------------------------------/\n")
+    print("/---------------------------------\\")
+    print("|    QTL-opdracht assignment 2    |")
+    print("|         Ontwikkeld door:        |")
+    print("| Gabe van de Hoeven & Max Nollet |")
+    print("\\---------------------------------/\n")
 
     loc_bestand = "CvixLerC9.loc"
     qua_bestand = "CvixLerC9.qua"
