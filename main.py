@@ -40,10 +40,10 @@ def read_qua_file(qua):
 
     :param qua: string - The filename of the qua file
     :return dic2: dict - The dictionary for the qua file. The keys are the positions and the values the numbers
+
     """
     dic2 = {}
     start_reading = False
-
     with open(qua, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
@@ -55,7 +55,6 @@ def read_qua_file(qua):
                 index = int(index)
                 num = num.replace("\n", "")
                 dic2.update({index: num})
-        qua_bes.close()
 
     return dic2
 
