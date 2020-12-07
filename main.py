@@ -30,7 +30,6 @@ def read_loc_file(loc):
                 dic.update({header: bands})
             elif start_reading:
                 loc_line += line.strip("\n")
-        loc_bes.close()
 
     return dic
 
