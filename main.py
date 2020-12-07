@@ -1,8 +1,8 @@
 
-def read_loc_file(loc):
+def read_loc_file(loc_file):
     """ This function reads a loc file and puts the contents in dictionary
 
-    :param loc: string - The filename of the loc file
+    :param loc_file: string - The filename of the loc file
     :return dic: dict - The dictionary for the loc file. The keys are the gen names and the values a list with the bands
 
     """
@@ -10,7 +10,7 @@ def read_loc_file(loc):
     loc_line = ""
     bands = []
     start_reading = False
-    with open(loc, "r") as loc_bes:
+    with open(loc_file, "r") as loc_bes:
         for line in loc_bes:
             if " (a,b) ;" in line:
                 start_reading = True
@@ -34,16 +34,16 @@ def read_loc_file(loc):
     return dictionary
 
 
-def read_qua_file(qua):
+def read_qua_file(qua_file):
     """ This function reads a qua file and puts the contents in a dictionary
 
-    :param qua: string - The filename of the qua file
+    :param qua_file: string - The filename of the qua file
     :return dic2: dict - The dictionary for the qua file. The keys are the positions and the values the numbers
 
     """
     dictionary = {}
     start_reading = False
-    with open(qua, "r") as qua_bes:
+    with open(qua_file, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
                 start_reading = True
