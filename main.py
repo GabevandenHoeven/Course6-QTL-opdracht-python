@@ -1,83 +1,92 @@
-
 def read_loc_file(loc_file):
-    """ This function reads a loc file and puts the contents in dictionary
+    """ This function reads a loc file and puts the contents in dictionary.
 
-    :param loc_file: string - The filename of the loc file
-    :return dic: dict - The dictionary for the loc file. The keys are the gen names and the values a list with the bands
+    :param loc_file: string - The filename of the loc file.
+    :return dic: dict - The dictionary for the loc file.
+    The keys are the marker names and the values a list with the loci.
 
     """
     dictionary = {}
     loc_line = ""
-    bands = []
+    loci = []
     start_reading = False
     with open(loc_file, "r") as loc_bes:
         for line in loc_bes:
             if " (a,b) ;" in line:
+                # If the line contains " (a,b) ;", it is a header.
                 start_reading = True
                 if not loc_line == "":
+                    # When loc_line is not empty, the loci will be saved in a list.
                     for c in loc_line:
                         if not c == " ":
-                            bands.append(c)
-                    dictionary.update({header: bands})
-                    bands = []
+                            loci.append(c)
+                    dictionary.update({header: loci})
+                    # The dictionary is updated with a key-value pair of the marker name and a list of loci.
+                    loci = []
                     loc_line = ""
                 header = line.split(" (a,b) ;")[0]
+                # The header is saved.
             elif "individual names:" in line:
+                # If the line contains "individual names", it means that all the markers have been read.
+                # To make sure we don't get any other information start_reading is put to False
                 start_reading = False
                 for c in loc_line:
                     if not c == " ":
-                        bands.append(c)
-                dictionary.update({header: bands})
+                        loci.append(c)
+                dictionary.update({header: loci})
+                # Here, the dictionary will be updated for the last time.
             elif start_reading:
+                # If the line does not contain " (a,b) ;", and start_reading is true, the line is added to loc_line.
                 loc_line += line.strip("\n")
 
     return dictionary
 
 
 def read_qua_file(qua_file):
-    """ This function reads a qua file and puts the contents in a dictionary
+    """ This function reads a qua file and puts the contents in a dictionary.
 
-    :param qua_file: string - The filename of the qua file
-    :return dic2: dict - The dictionary for the qua file. The keys are the positions and the values the numbers
+    :param qua_file: string - The filename of the qua file.
+    :return qua_list: list - The list for the qua file. It contains the numbers in order of the loci.
 
     """
-    dictionary = {}
+    qua_list = []
     start_reading = False
     with open(qua_file, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
+                # If the line startswith "1", the numbers that follow will have to be saved.
                 start_reading = True
             elif line == "":
+                # If the line is empty, there are no more numbers so you don't want to save anything anymore
                 start_reading = False
             if start_reading:
-                index, num = line.split("\t")
-                index = int(index)
+                num = line.split("\t")[1]
                 num = num.replace("\n", "")
-                dictionary.update({index: num})
+                qua_list.append(num)
+                # Splits the line in 2 pieces and takes the second one (0, 1), and put it in the list
 
-    return dictionary
+    return qua_list
 
 
-def waardesConverteren(loc, qua):
-    """Een functie die waardes toekent aan A's en B's van de
-       bijbehorende marker en deze doet retourneren als een
-       lijst.
+def converting_values(loc_, qua_):
+    """ A function that links the numbers from the qua_list to the a's and b's of the respective markers.
+    It returns a list.
 
-    Input = -dictionary met markers en loci (dict).
-            -dictionary met waardes (dict).
-    Output = lijst met omgezette waardes.
+    :param loc_: dict - Dictionary with the marker names and loci.
+    :param qua_: list - List with numbers
+    :return : list -
+
     """
-    markers = loc.keys()
-    # Alle markers in de dioctionary afgaan.
+    markers = loc_.keys()
     for marker in markers:
-        loci = loc.get(marker)
+        # Runs over all markers in the dictionary
+        loci = loc_.get(marker)
         teller = 0
-        # Alle loci omzetten naar een waarde uit qua-bestand.
         for locus in loci:
+            # Converts all loci to the respective value from the qua list
             teller += 1
             print(str(teller) + " " + locus)
     return 0
-
 
 
 if __name__ == "__main__":
@@ -92,4 +101,4 @@ if __name__ == "__main__":
 
     loc = read_loc_file(loc_bestand)
     qua = read_qua_file(qua_bestand)
-    waardesConverteren(loc, qua)
+    converting_values(loc, qua)
