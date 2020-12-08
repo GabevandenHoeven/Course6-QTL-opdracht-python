@@ -82,8 +82,15 @@ def converting_values(loc_, qua_):
         # Runs over all markers in the dictionary
         loci = loc_.get(marker)
         teller = 0
+        a_loci = []
+        b_loci = []
         for locus in loci:
             # Converts all loci to the respective value from the qua list
+            loci[locus] = qua_[locus]
+            if loci[locus] == "a":
+                a_loci.append(locus)
+            else:
+                b_loci.append(locus)
             teller += 1
             print(str(teller) + " " + locus)
     return 0
