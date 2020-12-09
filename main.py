@@ -56,6 +56,7 @@ def read_qua_file(qua_file):
     """
     qua_list = []
     start_reading = False
+    print("Reading .qua-file . . .", end=" ")
     with open(qua_file, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
@@ -69,7 +70,7 @@ def read_qua_file(qua_file):
                 num = num.replace("\n", "")
                 qua_list.append(num)
                 # Splits the line in 2 pieces and takes the second one (0, 1), and put it in the list
-
+    print("done!")
     return qua_list
 
 
