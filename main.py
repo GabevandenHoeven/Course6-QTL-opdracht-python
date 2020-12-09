@@ -91,10 +91,12 @@ def converting_values(loc, qua):
         for locus in loci:
             # Converts all loci to the respective value from the qua list
             if locus == "a" or locus == "b":
-                value = qua_[teller]
+                value = qua[teller]
                 if value != "-" and value != "0":
-                    if locus == "a": a_loci.append(float(value))
-                    else: b_loci.append(float(value))
+                    if locus == "a":
+                        a_loci.append(float(value))
+                    else:
+                        b_loci.append(float(value))
                 teller += 1
         # Store values with marker in 2d-list.
         values.append((marker, tuple(a_loci), tuple(b_loci)))
@@ -106,6 +108,12 @@ def calculations(values):
 
     :return:
     """
+    for marker, a, b in values:
+        dataframe = subprocess.run(['Rscript', '-e', f"data.frame({a}, {b})"], stdout=subprocess.PIPE)
+        results = subprocess.run(['Rscript', '-e', f"aov(a ~ b, data = {dataframe}"])
+        print(dataframe.stdout.decode("UTF-8"))
+        print(results)
+        break
 
     return 0
 
