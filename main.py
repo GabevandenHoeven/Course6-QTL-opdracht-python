@@ -1,3 +1,6 @@
+import subprocess
+
+
 def read_loc_file(loc_file):
     """ This function reads a loc file and puts the contents in dictionary.
 
@@ -68,20 +71,20 @@ def read_qua_file(qua_file):
     return qua_list
 
 
-def converting_values(loc_, qua_):
+def converting_values(loc, qua):
     """ A function that links the numbers from the qua_list to the a's and b's of the respective markers.
     It returns a list.
 
-    :param loc_: dict - Dictionary with the marker names and loci.
-    :param qua_: list - List with numbers
+    :param loc: dict - Dictionary with the marker names and loci.
+    :param qua: list - List with numbers
     :return : list -
 
     """
-    markers = loc_.keys()
+    markers = loc.keys()
     values = list()
     for marker in markers:
         # Runs over all markers in the dictionary
-        loci = loc_.get(marker)
+        loci = loc.get(marker)
         teller = 0
         a_loci = []
         b_loci = []
@@ -98,7 +101,22 @@ def converting_values(loc_, qua_):
     return tuple(values)
 
 
-if __name__ == "__main__":
+def calculations(values):
+    """
+
+    :return:
+    """
+    for marker, a, b in values:
+        dataframe = subprocess.run(['Rscript', '-e', f"data.frame({a}, {b})"], stdout=subprocess.PIPE)
+        results = subprocess.run(['Rscript', '-e', f"aov(a ~ b, data = {dataframe}"])
+        print(dataframe.stdout.decode("UTF-8"))
+        print(results)
+        break
+
+    return 0
+
+
+def main():
     print("/---------------------------------\\")
     print("|    QTL-opdracht assignment 2    |")
     print("|         Ontwikkeld door:        |")
@@ -111,3 +129,7 @@ if __name__ == "__main__":
     loc = read_loc_file(loc_bestand)
     qua = read_qua_file(qua_bestand)
     values = converting_values(loc, qua)
+    calculations(values)
+
+
+main()
