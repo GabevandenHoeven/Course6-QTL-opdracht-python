@@ -17,31 +17,31 @@ def read_loc_file(loc_file):
     print("Reading .loc-file . . .", end=" ")
     with open(loc_file, "r") as loc_bes:
         for line in loc_bes:
+            # If the line contains " (a,b) ;", it is a header.
             if " (a,b) ;" in line:
-                # If the line contains " (a,b) ;", it is a header.
                 start_reading = True
+                # When loc_line is not empty, the loci will be saved in a list.
                 if not loc_line == "":
-                    # When loc_line is not empty, the loci will be saved in a list.
                     for c in loc_line:
                         if not c == " ":
                             loci.append(c)
-                    dictionary.update({header: loci})
                     # The dictionary is updated with a key-value pair of the marker name and a list of loci.
+                    dictionary.update({header: loci})
                     loci = []
                     loc_line = ""
-                header = line.split(" (a,b) ;")[0]
                 # The header is saved.
+                header = line.split(" (a,b) ;")[0]
+            # If the line contains "individual names", it means that all the markers have been read.
+            # To make sure we don't get any other information start_reading is put to False.
             elif "individual names:" in line:
-                # If the line contains "individual names", it means that all the markers have been read.
-                # To make sure we don't get any other information start_reading is put to False
                 start_reading = False
                 for c in loc_line:
                     if not c == " ":
                         loci.append(c)
-                dictionary.update({header: loci})
                 # Here, the dictionary will be updated for the last time.
+                dictionary.update({header: loci})
+            # If the line does not contain " (a,b) ;", and start_reading is true, the line is added to loc_line.
             elif start_reading:
-                # If the line does not contain " (a,b) ;", and start_reading is true, the line is added to loc_line.
                 loc_line += line.strip("\n")
     print("done!")
     return dictionary
@@ -59,41 +59,42 @@ def read_qua_file(qua_file):
     print("Reading .qua-file . . .", end=" ")
     with open(qua_file, "r") as qua_bes:
         for line in qua_bes:
+            # If the line startswith "1", the numbers that follow will have to be saved.
             if line.startswith("1"):
-                # If the line startswith "1", the numbers that follow will have to be saved.
                 start_reading = True
+            # If the line is empty, there are no more numbers so you don't want to save anything anymore.
             elif line == "":
-                # If the line is empty, there are no more numbers so you don't want to save anything anymore
                 start_reading = False
             if start_reading:
+                # Splits the line in 2 pieces and takes the second one (0, 1), and put it in the list.
                 num = line.split("\t")[1]
                 num = num.replace("\n", "")
                 qua_list.append(num)
-                # Splits the line in 2 pieces and takes the second one (0, 1), and put it in the list
     print("done!")
     return qua_list
 
 
 def converting_values(loc, qua):
     """ A function that links the numbers from the qua_list to the a's and b's of the respective markers.
-    It returns a list.
+    It returns a 2D tuple.
 
     :param loc: dict - Dictionary with the marker names and loci.
     :param qua: list - List with numbers
-    :return : list -
+    :return values: 2D tuple - A tuple with for every marker a tuple,
+        containing the marker name, a tuple with values of a and a tuple with values of b.
 
     """
     markers = loc.keys()
     values = list()
     print("Converting values . . .", end=" ")
+    # Runs over all markers in the dictionary.
     for marker in markers:
-        # Runs over all markers in the dictionary
         loci = loc.get(marker)
         teller = 0
         a_loci = []
         b_loci = []
         for locus in loci:
-            # Converts all loci to the respective value from the qua list
+            # Converts all loci to the respective value from the qua list.
             if locus == "a" or locus == "b":
                 value = qua[teller]
                 if value != "-":
@@ -114,16 +115,18 @@ def calculations(values):
     :param values: 2D tuple - A tuple with for every marker a tuple,
         containing the marker name, a tuple with values of a and a tuple with values of b.
     :return p-values: 2D tuple - A tuple with for every marker the marker name and the p-value.
+
     """
     p_values = list()
     pattern = re.compile(r"\[\d\]\s(\d\.?\d*e?-?\d*)")
     marker_count = len(values)
     counter = 1
     for marker, a, b in values:
-        # Display status of calculating P-values.
+        # Display status of calculating p-values.
         print(f"\rCalculating P-values: {counter}/{marker_count}"
               + f" ({round(100 / marker_count * counter, 1)}%) . . .", end="")
 
+        # Conducts the ANOVA test and returns the p-value from the commandline.
         anova_test = subprocess.run(['Rscript', '-e', "summary(aov(waarde~loci, "
                                      + f" data=data.frame(waarde=c(c{a}, c{b}), "
                                      + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
@@ -142,6 +145,7 @@ def write_to_file(p_values):
 
     :param p_values: 2D tuple - A tuple with for every marker the marker name and the p-value.
     :return:
+
     """
     with open("markers_with_p-values.txt", "w") as file:
         file.write("marker\tp-value\n")
