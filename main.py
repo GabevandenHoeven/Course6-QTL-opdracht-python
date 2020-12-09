@@ -151,10 +151,12 @@ def write_to_file(p_values):
     :return:
 
     """
+    print("Saving results . . .", end=" ")
     with open("markers_with_p-values.txt", "w") as file:
         file.write("marker\tp-value\n")
         for marker, p_value in p_values:
             file.write(f"{marker}\t{p_value}\n")
+    print("done!\n\n")
 
     return 0
 
