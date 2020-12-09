@@ -14,6 +14,7 @@ def read_loc_file(loc_file):
     loc_line = ""
     loci = []
     start_reading = False
+    print("Reading .loc-file . . .", end=" ")
     with open(loc_file, "r") as loc_bes:
         for line in loc_bes:
             if " (a,b) ;" in line:
@@ -42,7 +43,7 @@ def read_loc_file(loc_file):
             elif start_reading:
                 # If the line does not contain " (a,b) ;", and start_reading is true, the line is added to loc_line.
                 loc_line += line.strip("\n")
-
+    print("done!")
     return dictionary
 
 
