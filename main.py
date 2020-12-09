@@ -78,6 +78,7 @@ def converting_values(loc_, qua_):
 
     """
     markers = loc_.keys()
+    values = list()
     for marker in markers:
         # Runs over all markers in the dictionary
         loci = loc_.get(marker)
@@ -86,14 +87,14 @@ def converting_values(loc_, qua_):
         b_loci = []
         for locus in loci:
             # Converts all loci to the respective value from the qua list
-            loci[locus] = qua_[locus]
-            if loci[locus] == "a":
-                a_loci.append(locus)
-            else:
-                b_loci.append(locus)
+            if locus == "a":
+                a_loci.append(qua_[teller])
+            elif locus == "b":
+                b_loci.append(qua_[teller])
             teller += 1
-            print(str(teller) + " " + locus)
-    return 0
+        # Store values with marker in 2d-list.
+        values.append((marker, tuple(a_loci), tuple(b_loci)))
+    return tuple(values)
 
 
 if __name__ == "__main__":
@@ -108,4 +109,4 @@ if __name__ == "__main__":
 
     loc = read_loc_file(loc_bestand)
     qua = read_qua_file(qua_bestand)
-    converting_values(loc, qua)
+    values = converting_values(loc, qua)
