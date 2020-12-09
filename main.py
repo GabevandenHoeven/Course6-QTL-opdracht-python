@@ -14,6 +14,7 @@ def read_loc_file(loc_file):
     loc_line = ""
     loci = []
     start_reading = False
+    print("Reading .loc-file . . .", end=" ")
     with open(loc_file, "r") as loc_bes:
         for line in loc_bes:
             if " (a,b) ;" in line:
@@ -42,7 +43,7 @@ def read_loc_file(loc_file):
             elif start_reading:
                 # If the line does not contain " (a,b) ;", and start_reading is true, the line is added to loc_line.
                 loc_line += line.strip("\n")
-
+    print("done!")
     return dictionary
 
 
@@ -55,6 +56,7 @@ def read_qua_file(qua_file):
     """
     qua_list = []
     start_reading = False
+    print("Reading .qua-file . . .", end=" ")
     with open(qua_file, "r") as qua_bes:
         for line in qua_bes:
             if line.startswith("1"):
@@ -68,7 +70,7 @@ def read_qua_file(qua_file):
                 num = num.replace("\n", "")
                 qua_list.append(num)
                 # Splits the line in 2 pieces and takes the second one (0, 1), and put it in the list
-
+    print("done!")
     return qua_list
 
 
@@ -83,6 +85,7 @@ def converting_values(loc, qua):
     """
     markers = loc.keys()
     values = list()
+    print("Converting values . . .", end=" ")
     for marker in markers:
         # Runs over all markers in the dictionary
         loci = loc.get(marker)
@@ -101,6 +104,7 @@ def converting_values(loc, qua):
                     teller += 1
         # Store values with marker in 2d-list.
         values.append((marker, tuple(a_loci), tuple(b_loci)))
+    print("done!")
     return tuple(values)
 
 
