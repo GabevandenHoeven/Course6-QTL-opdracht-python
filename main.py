@@ -125,8 +125,7 @@ def calculations(values):
         # Display status of calculating p-values.
         print(f"\rCalculating P-values: {counter}/{marker_count}"
               + f" ({round(100 / marker_count * counter, 1)}%) . . .", end="")
-        #if marker == "FD.90L":
-        #    print()
+
         # Conducts the ANOVA test and returns the p-value from the commandline.
         anova_test = subprocess.run(['Rscript', '-e', "summary(aov(waarde~loci, "
                                      + f" data=data.frame(waarde=c(c{a}, c{b}), "
@@ -134,9 +133,6 @@ def calculations(values):
                                      + f"{len(b)}))))))[[1]][['Pr(>F)']]"], stdout=subprocess.PIPE)
 
         p_value = pattern.findall(anova_test.stdout.decode("UTF-8"))[0]
-        #print(a)
-        #print()
-        #print(b)
         p_values.append((marker, p_value))
         counter += 1
     print(" done!")
