@@ -106,12 +106,6 @@ def calculations(values):
 
     :return:
     """
-    for marker, a, b in values:
-        dataframe = subprocess.run(['Rscript', '-e', f"data.frame({a}, {b})"], stdout=subprocess.PIPE)
-        results = subprocess.run(['Rscript', '-e', f"aov(a ~ b, data = {dataframe}"])
-        print(dataframe.stdout.decode("UTF-8"))
-        print(results)
-        break
 
     return 0
 
