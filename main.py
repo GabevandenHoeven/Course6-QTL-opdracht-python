@@ -85,6 +85,7 @@ def converting_values(loc, qua):
     """
     markers = loc.keys()
     values = list()
+    print("Converting values . . .", end=" ")
     for marker in markers:
         # Runs over all markers in the dictionary
         loci = loc.get(marker)
@@ -103,6 +104,7 @@ def converting_values(loc, qua):
                     teller += 1
         # Store values with marker in 2d-list.
         values.append((marker, tuple(a_loci), tuple(b_loci)))
+    print("done!")
     return tuple(values)
 
 
