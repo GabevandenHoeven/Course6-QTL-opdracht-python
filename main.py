@@ -87,10 +87,11 @@ def converting_values(loc_, qua_):
         b_loci = []
         for locus in loci:
             # Converts all loci to the respective value from the qua list
-            if locus == "a":
-                a_loci.append(qua_[teller])
-            elif locus == "b":
-                b_loci.append(qua_[teller])
+            if locus == "a" or locus == "b":
+                value = qua_[teller]
+                if value != "-":
+                    if locus == "a": a_loci.append(float(value))
+                    else: b_loci.append(float(value))
             teller += 1
         # Store values with marker in 2d-list.
         values.append((marker, tuple(a_loci), tuple(b_loci)))
