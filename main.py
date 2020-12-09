@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 
 def read_loc_file(loc_file):
@@ -92,12 +93,12 @@ def converting_values(loc, qua):
             # Converts all loci to the respective value from the qua list
             if locus == "a" or locus == "b":
                 value = qua[teller]
-                if value != "-" and value != "0":
+                if value != "-":
                     if locus == "a":
                         a_loci.append(float(value))
                     else:
                         b_loci.append(float(value))
-                teller += 1
+                    teller += 1
         # Store values with marker in 2d-list.
         values.append((marker, tuple(a_loci), tuple(b_loci)))
     return tuple(values)
@@ -108,14 +109,27 @@ def calculations(values):
 
     :return:
     """
+    p_values = list()
+    pattern = re.compile("\[\d\]\s(\d\.?\d*e?-?\d*)")
+    marker_count = len(values)
+    counter = 1
     for marker, a, b in values:
-        dataframe = subprocess.run(['Rscript', '-e', f"data.frame({a}, {b})"], stdout=subprocess.PIPE)
-        results = subprocess.run(['Rscript', '-e', f"aov(a ~ b, data = {dataframe}"])
-        print(dataframe.stdout.decode("UTF-8"))
-        print(results)
-        break
-
-    return 0
+        # Display status of calculating P-values.
+        print(f"\rCalculating P-values: {counter}/{marker_count}"
+             + f" ({round(100/marker_count*counter, 1)}%) . . .", end="")
+        #anova_test = subprocess.run(['Rscript', '-e', f"anova(aov(waarde~loci, "
+        #                           + f" data=data.frame(waarde=c(c{a}, c{b}), "
+        #                          + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
+        #                         + f"{len(b)}))))))"], stdout=subprocess.PIPE)
+        anova_test = subprocess.run(['Rscript', '-e', "summary(aov(waarde~loci, "
+                                   + f" data=data.frame(waarde=c(c{a}, c{b}), "
+                                  + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
+                                 + f"{len(b)}))))))[[1]][['Pr(>F)']]"], stdout=subprocess.PIPE)
+        p_value = pattern.findall(anova_test.stdout.decode("UTF-8"))[0]
+        p_values.append((marker, p_value))
+        counter += 1
+    print(" done!")
+    return tuple(p_values)
 
 
 def main():
