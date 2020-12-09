@@ -6,7 +6,7 @@ def read_loc_file(loc_file):
     """ This function reads a loc file and puts the contents in dictionary.
 
     :param loc_file: string - The filename of the loc file.
-    :return dic: dict - The dictionary for the loc file.
+    :return dictionary: dict - The dictionary for the loc file.
     The keys are the marker names and the values a list with the loci.
 
     """
@@ -105,31 +105,46 @@ def converting_values(loc, qua):
 
 
 def calculations(values):
-    """
+    """Calculates the p-values using R on the commandline.
 
-    :return:
+    :param values: 2D tuple - A tuple with for every marker a tuple,
+        containing the marker name, a tuple with values of a and a tuple with values of b.
+    :return p-values: 2D tuple - A tuple with for every marker the marker name and the p-value.
     """
     p_values = list()
-    pattern = re.compile("\[\d\]\s(\d\.?\d*e?-?\d*)")
+    pattern = re.compile(r"\[\d\]\s(\d\.?\d*e?-?\d*)")
     marker_count = len(values)
     counter = 1
     for marker, a, b in values:
         # Display status of calculating P-values.
         print(f"\rCalculating P-values: {counter}/{marker_count}"
-             + f" ({round(100/marker_count*counter, 1)}%) . . .", end="")
-        #anova_test = subprocess.run(['Rscript', '-e', f"anova(aov(waarde~loci, "
-        #                           + f" data=data.frame(waarde=c(c{a}, c{b}), "
-        #                          + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
-        #                         + f"{len(b)}))))))"], stdout=subprocess.PIPE)
+              + f" ({round(100 / marker_count * counter, 1)}%) . . .", end="")
+
         anova_test = subprocess.run(['Rscript', '-e', "summary(aov(waarde~loci, "
-                                   + f" data=data.frame(waarde=c(c{a}, c{b}), "
-                                  + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
-                                 + f"{len(b)}))))))[[1]][['Pr(>F)']]"], stdout=subprocess.PIPE)
+                                     + f" data=data.frame(waarde=c(c{a}, c{b}), "
+                                     + f"loci=factor(rep(c('a', 'b'), times=c({len(a)},  "
+                                     + f"{len(b)}))))))[[1]][['Pr(>F)']]"], stdout=subprocess.PIPE)
+
         p_value = pattern.findall(anova_test.stdout.decode("UTF-8"))[0]
         p_values.append((marker, p_value))
         counter += 1
     print(" done!")
+
     return tuple(p_values)
+
+
+def write_to_file(p_values):
+    """Writes the p-values to a file.
+
+    :param p_values: 2D tuple - A tuple with for every marker the marker name and the p-value.
+    :return:
+    """
+    with open("markers_with_p-values.txt", "w") as file:
+        file.write("marker\tp-value\n")
+        for marker, p_value in p_values:
+            file.write(f"{marker}\t{p_value}\n")
+
+    return 0
 
 
 def main():
@@ -145,7 +160,8 @@ def main():
     loc = read_loc_file(loc_bestand)
     qua = read_qua_file(qua_bestand)
     values = converting_values(loc, qua)
-    calculations(values)
+    p_values = calculations(values)
+    write_to_file(p_values)
 
 
 main()
