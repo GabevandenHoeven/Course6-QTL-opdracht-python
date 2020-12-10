@@ -33,7 +33,8 @@ def read_loc_file(loc_file):
                     loci = []
                     loc_line = ""
                 # The header is saved.
-                header = line.split(" (a,b) ;")[0]
+                #header = line.split(" (a,b) ;")[0]
+                header = line.strip()
             # If the line contains "individual names", it means that all the markers have been read.
             # To make sure we don't get any other information start_reading is put to False.
             elif "individual names:" in line:
@@ -153,7 +154,7 @@ def write_to_file(p_values):
 
     """
     print("Saving results . . .", end=" ")
-    with open("markers_with_p-values.txt", "w") as file:
+    with open("markers_with_p-values.csv", "w") as file:
         file.write("marker\tp-value\n")
         for marker, p_value in p_values:
             file.write(f"{marker}\t{p_value}\n")
