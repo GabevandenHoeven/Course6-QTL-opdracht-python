@@ -33,7 +33,6 @@ def read_loc_file(loc_file):
                     loci = []
                     loc_line = ""
                 # The header is saved.
-                #header = line.split(" (a,b) ;")[0]
                 header = line.strip()
             # If the line contains "individual names", it means that all the markers have been read.
             # To make sure we don't get any other information start_reading is put to False.
@@ -170,7 +169,8 @@ def file_checker(filename):
     Output = -code indicating the file exists.
              -exitcode if the file doesn't exist.
     """
-    if os.path.isfile(filename): return 0
+    if os.path.isfile(filename):
+        return 0
     else:
         print(f"File '{filename}' not found! Script will exit now.")
         exit()
