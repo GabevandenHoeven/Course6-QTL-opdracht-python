@@ -1,6 +1,7 @@
 import subprocess
 import shutil
 import re
+import os
 
 
 def read_loc_file(loc_file):
@@ -11,6 +12,7 @@ def read_loc_file(loc_file):
     The keys are the marker names and the values a list with the loci.
 
     """
+    file_checker(loc_file)
     dictionary = {}
     loc_line = ""
     loci = []
@@ -55,6 +57,7 @@ def read_qua_file(qua_file):
     :return qua_list: list - The list for the qua file. It contains the numbers in order of the loci.
 
     """
+    file_checker(qua_file)
     qua_list = []
     start_reading = False
     print("Reading .qua-file . . .", end=" ")
@@ -142,7 +145,6 @@ def calculations(values):
         exit()
 
 
-
 def write_to_file(p_values):
     """Writes the p-values to a file.
 
@@ -158,6 +160,19 @@ def write_to_file(p_values):
     print("done!\n\n")
 
     return 0
+
+
+def file_checker(filename):
+    """A function that checks if a file exists or not.
+
+    Input = name of the file to be chacked.
+    Output = -code indicating the file exists.
+             -exitcode if the file doesn't exist.
+    """
+    if os.path.isfile(filename): return 0
+    else:
+        print(f"File '{filename}' not found! Script will exit now.")
+        exit()
 
 
 def main():
